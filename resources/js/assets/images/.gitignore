@@ -1,0 +1,11 @@
+# Assets ignore patterns
+*.gif
+*.jpg
+*.jpeg
+*.png
+*.webp
+
+# Keep only essential images
+!README.md
+!*.svg
+!constants/

@@ -15,9 +15,12 @@
     </div>
 
     <!-- Dashboard Widgets -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
       <!-- Clock Widget -->
       <ClockWidget />
+
+      <!-- Weather Widget -->
+      <WeatherWidget />
     </div>
   </div>
 </template>
@@ -25,4 +28,5 @@
 <script setup>
 import { RouterLink } from 'vue-router';
 import ClockWidget from '@/Components/ClockWidget.vue';
+import WeatherWidget from '@/Components/WeatherWidget.vue';
 </script>
