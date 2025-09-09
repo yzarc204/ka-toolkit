@@ -25,6 +25,13 @@ class NoteController extends Controller
             ->orderBy('updated_at', 'desc')
             ->get();
 
+        // Add permission information to each note
+        $notes->each(function ($note) use ($user) {
+            $note->can_edit = $note->user_id === $user->id;
+            $note->is_owner = $note->user_id === $user->id;
+            $note->is_shared_with_me = $note->user_id !== $user->id && $note->sharedWith->contains($user->id);
+        });
+
         return response()->json($notes);
     }
 
@@ -61,7 +68,14 @@ class NoteController extends Controller
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 
-        return response()->json($note->load(['user', 'sharedWith']));
+        $noteData = $note->load(['user', 'sharedWith']);
+
+        // Add permission information
+        $noteData->can_edit = $note->user_id === $user->id;
+        $noteData->is_owner = $note->user_id === $user->id;
+        $noteData->is_shared_with_me = $note->user_id !== $user->id && $note->sharedWith->contains($user->id);
+
+        return response()->json($noteData);
     }
 
     /**

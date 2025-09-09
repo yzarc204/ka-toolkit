@@ -3,13 +3,13 @@
     <div v-if="note" class="p-6">
       <!-- Title Input -->
       <div class="mb-6">
-        <input type="text" :value="note.title" @input="$emit('update:title', $event.target.value)"
+        <input type="text" :value="note.title" @input="$emit('update:title', $event.target.value)" :disabled="!canEdit"
           class="w-full text-2xl font-bold border-0 border-b border-light-border dark:border-dark-border pb-2 focus:ring-0 focus:outline-none focus:border-primary-500 bg-transparent text-light-text dark:text-dark-text placeholder-gray-500 dark:placeholder-gray-400"
-          placeholder="Untitled Note" />
+          :class="{ 'opacity-50 cursor-not-allowed': !canEdit }" placeholder="Untitled Note" />
       </div>
 
       <!-- Formatting Toolbar -->
-      <div
+      <div v-if="canEdit"
         class="mb-4 flex flex-wrap gap-1 p-3 bg-light-hover dark:bg-dark-hover rounded-xl border border-light-border dark:border-dark-border">
         <!-- Text Formatting -->
         <div class="flex gap-1">
@@ -63,17 +63,18 @@
 
       <!-- Content Editor -->
       <div class="mb-6">
-        <div ref="contentEditable" contenteditable="true" @input="handleContentInput" @keydown="handleKeydown"
+        <div ref="contentEditable" :contenteditable="canEdit" @input="handleContentInput" @keydown="handleKeydown"
           @focus="updateFormattingState" @mouseup="updateFormattingState" @paste="handlePaste"
           @click="handleEditorClick" @mousemove="handleMouseMove" @mouseleave="handleMouseLeave"
           class="w-full min-h-[400px] border-0 focus:ring-0 resize-none bg-transparent text-light-text dark:text-dark-text placeholder-gray-500 dark:placeholder-gray-400 prose prose-sm max-w-none dark:prose-invert"
-          data-placeholder="Start writing your note..."></div>
+          :class="{ 'cursor-text': !canEdit }" data-placeholder="Start writing your note..."></div>
       </div>
 
       <!-- Action Buttons -->
       <div class="flex items-center justify-between">
         <div class="flex items-center space-x-4">
-          <button @click="$emit('toggle-public-status')"
+          <!-- Public/Private status - only show for owners -->
+          <button v-if="note.is_owner" @click="$emit('toggle-public-status')"
             class="flex items-center text-sm opacity-90 hover:opacity-100 transition-opacity">
             <div v-if="note.is_public" class="flex items-center">
               <GlobeAltIcon class="h-4 w-4 mr-1" />
@@ -85,20 +86,28 @@
             </div>
           </button>
 
+          <!-- Show read-only status for shared users -->
+          <div v-if="note.is_shared_with_me" class="flex items-center text-sm opacity-70">
+            <LockClosedIcon class="h-4 w-4 mr-1" />
+            <span>Read Only</span>
+          </div>
+
           <button @click="copyNoteLink"
             class="flex items-center text-sm opacity-90 hover:opacity-100 transition-opacity mr-4">
             <LinkIcon class="h-4 w-4 mr-1" />
             <span>Copy Link</span>
           </button>
 
-          <button @click="$emit('show-share-modal')"
+          <!-- Share button - only for owners -->
+          <button v-if="note.is_owner" @click="$emit('show-share-modal')"
             class="flex items-center text-sm opacity-90 hover:opacity-100 transition-opacity">
             <UserGroupIcon class="h-4 w-4 mr-1" />
             <span>Share</span>
           </button>
         </div>
 
-        <button @click="$emit('delete-note')"
+        <!-- Delete button - only for owners -->
+        <button v-if="note.is_owner" @click="$emit('delete-note')"
           class="text-sm text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 transition-colors">
           Delete Note
         </button>
@@ -156,11 +165,14 @@
 <style scoped>
 /* Ensure links are clickable and have proper cursor */
 .prose a {
-  cursor: text !important;
   text-decoration: underline !important;
   pointer-events: auto !important;
   position: relative;
   z-index: 1;
+  user-select: text;
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
 }
 
 .prose a:hover {
@@ -168,22 +180,37 @@
   opacity: 0.8;
 }
 
-/* Allow text selection on links for better UX */
-.prose a {
-  user-select: text;
-  -webkit-user-select: text;
-  -moz-user-select: text;
-  -ms-user-select: text;
+/* Ensure text cursor for readonly mode */
+.cursor-text {
+  cursor: text !important;
 }
 
-/* Change cursor to default when Ctrl is held (handled by browser) */
+.cursor-text * {
+  cursor: text !important;
+}
+
+/* Ensure consistent hover behavior for all users */
+[contenteditable] {
+  cursor: text;
+}
+
+[contenteditable="false"] {
+  cursor: text;
+}
+
+/* Override any conflicting cursor styles */
+.prose a {
+  cursor: text;
+}
+
+/* Change cursor to default when Ctrl is held over links */
 .prose a:active {
-  cursor: default !important;
+  cursor: default;
 }
 </style>
 
 <script setup>
-import { ref, onMounted, onUnmounted, nextTick, watch } from 'vue';
+import { ref, onMounted, onUnmounted, nextTick, watch, computed } from 'vue';
 import {
   BoldIcon,
   ItalicIcon,
@@ -206,6 +233,11 @@ const props = defineProps({
     type: Object,
     required: true
   }
+});
+
+// Computed property to check if user can edit
+const canEdit = computed(() => {
+  return props.note?.can_edit !== false;
 });
 
 const emit = defineEmits([
@@ -302,7 +334,7 @@ let lastEmittedContent = '';
 let isUpdatingFromNote = false;
 
 const handleContentInput = () => {
-  if (!props.note || !contentEditable.value || isUpdatingFromNote) return;
+  if (!props.note || !contentEditable.value || isUpdatingFromNote || !canEdit.value) return;
 
   const currentContent = contentEditable.value.innerHTML;
 
@@ -324,6 +356,9 @@ const handleContentInput = () => {
 
 // Handle keyboard shortcuts
 const handleKeydown = (event) => {
+  // Don't allow formatting shortcuts if user can't edit
+  if (!canEdit.value) return;
+
   // Bold: Ctrl+B
   if (event.ctrlKey && event.key === 'b') {
     event.preventDefault();
@@ -380,6 +415,11 @@ const handleKeydown = (event) => {
 
 // Handle paste events - only paste plain text
 const handlePaste = (event) => {
+  if (!canEdit.value) {
+    event.preventDefault();
+    return;
+  }
+
   event.preventDefault();
 
   const clipboardData = event.clipboardData || window.clipboardData;
@@ -424,6 +464,12 @@ const handleEditorClick = (event) => {
       event.stopPropagation();
     }
   }
+
+  // In readonly mode, allow text selection but prevent any editing
+  if (!canEdit.value) {
+    // Allow text selection by not preventing default
+    return;
+  }
 };
 
 // Handle mouse move events to change cursor when Ctrl is held
@@ -433,10 +479,17 @@ const handleMouseMove = (event) => {
     if (event.ctrlKey || event.metaKey) {
       // Change cursor to default when Ctrl is held over link
       link.style.cursor = 'default';
+      link.style.setProperty('cursor', 'default', 'important');
     } else {
       // Change cursor to text when Ctrl is not held
       link.style.cursor = 'text';
+      link.style.setProperty('cursor', 'text', 'important');
     }
+  }
+
+  // Ensure text cursor for content editor (but not for links when Ctrl is held)
+  if (event.target.closest('[contenteditable]') && !link) {
+    event.target.style.cursor = 'text';
   }
 };
 
@@ -473,15 +526,22 @@ const updateLinkCursors = (ctrlPressed) => {
   links.forEach(link => {
     if (ctrlPressed) {
       link.style.cursor = 'default';
+      link.style.setProperty('cursor', 'default', 'important');
     } else {
       link.style.cursor = 'text';
+      link.style.setProperty('cursor', 'text', 'important');
     }
   });
+
+  // Ensure content editor has text cursor
+  if (contentEditable.value) {
+    contentEditable.value.style.cursor = 'text';
+  }
 };
 
 // Format text
 const formatText = (command) => {
-  if (!contentEditable.value) return;
+  if (!contentEditable.value || !canEdit.value) return;
 
   contentEditable.value.focus();
 
@@ -507,6 +567,8 @@ const formatText = (command) => {
 
 // Link functions
 const showLinkModal = () => {
+  if (!canEdit.value) return;
+
   // Ensure contentEditable is focused
   if (contentEditable.value) {
     contentEditable.value.focus();
