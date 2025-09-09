@@ -117,7 +117,9 @@
     <div v-if="showLinkDialog" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
       @click="closeLinkModal">
       <div class="bg-white dark:bg-gray-800 rounded-lg p-6 w-96 max-w-[90vw]" @click.stop>
-        <h3 class="text-lg font-semibold mb-4 text-gray-900 dark:text-white">Insert Link</h3>
+        <h3 class="text-lg font-semibold mb-4 text-gray-900 dark:text-white">
+          {{ savedRange && savedRange.isEditing ? 'Edit Link' : 'Insert Link' }}
+        </h3>
 
         <div class="space-y-4">
           <div>
@@ -143,7 +145,7 @@
           </button>
           <button @click="insertLink"
             class="px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-md hover:bg-primary-700 transition-colors">
-            Insert Link
+            {{ savedRange && savedRange.isEditing ? 'Update Link' : 'Insert Link' }}
           </button>
         </div>
       </div>
@@ -520,16 +522,44 @@ const showLinkModal = () => {
     savedRange.value = null;
   }
 
-  // Store the selected text for display
-  selectedTextForDisplay.value = selectedText;
-
-  if (selectedText) {
-    linkText.value = selectedText;
-  } else {
-    linkText.value = '';
+  // Check if cursor is inside a link
+  let currentLink = null;
+  if (selection.rangeCount > 0) {
+    const range = selection.getRangeAt(0);
+    const container = range.commonAncestorContainer;
+    currentLink = container.nodeType === Node.TEXT_NODE
+      ? container.parentElement.closest('a')
+      : container.closest('a');
   }
 
-  linkUrl.value = '';
+  // If cursor is inside a link, populate modal with link info
+  if (currentLink) {
+    linkText.value = currentLink.textContent || '';
+    linkUrl.value = currentLink.href || '';
+    selectedTextForDisplay.value = '';
+
+    // Save reference to the current link for editing
+    savedRange.value = {
+      linkElement: currentLink,
+      isEditing: true
+    };
+  } else {
+    // Store the selected text for display
+    selectedTextForDisplay.value = selectedText;
+
+    if (selectedText) {
+      linkText.value = selectedText;
+    } else {
+      linkText.value = '';
+    }
+
+    linkUrl.value = '';
+    savedRange.value = {
+      linkElement: null,
+      isEditing: false
+    };
+  }
+
   showLinkDialog.value = true;
 };
 
@@ -557,7 +587,28 @@ const insertLink = () => {
     contentEditable.value.focus();
   }
 
-  // Create link element
+  // Check if we're editing an existing link
+  if (savedRange.value && savedRange.value.isEditing && savedRange.value.linkElement) {
+    // Update existing link
+    const existingLink = savedRange.value.linkElement;
+    existingLink.href = linkUrl.value;
+    existingLink.textContent = linkText.value;
+
+    // Move cursor after the updated link
+    const selection = window.getSelection();
+    const newRange = document.createRange();
+    newRange.setStartAfter(existingLink);
+    newRange.collapse(true);
+    selection.removeAllRanges();
+    selection.addRange(newRange);
+
+    handleContentInput();
+    updateFormattingState();
+    closeLinkModal();
+    return;
+  }
+
+  // Create new link element
   const link = document.createElement('a');
   link.href = linkUrl.value;
   link.textContent = linkText.value;
@@ -570,7 +621,7 @@ const insertLink = () => {
   let range;
   const selection = window.getSelection();
 
-  if (savedRange.value) {
+  if (savedRange.value && !savedRange.value.isEditing) {
     // Restore the saved range
     selection.removeAllRanges();
     selection.addRange(savedRange.value);
