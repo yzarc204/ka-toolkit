@@ -17,8 +17,8 @@ const routes = [
                 component: Home,
             },
             {
-                path: "tools/notes",
-                name: "tools.notes",
+                path: "note",
+                name: "note",
                 component: NotesPage,
             },
             {

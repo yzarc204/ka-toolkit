@@ -15,18 +15,34 @@
     </div>
 
     <!-- Dashboard Widgets -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <!-- Apps Widget -->
+      <div class="aspect-square">
+        <AppsWidget class="h-full" />
+      </div>
+
       <!-- Clock Widget -->
-      <ClockWidget />
+      <div class="aspect-square">
+        <ClockWidget class="h-full" />
+      </div>
 
       <!-- Weather Widget -->
-      <WeatherWidget />
+      <div class="aspect-square">
+        <WeatherWidget class="h-full" />
+      </div>
+
+      <!-- News Widget -->
+      <div class="aspect-square">
+        <NewsWidget class="h-full" />
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
 import { RouterLink } from 'vue-router';
-import ClockWidget from '@/Components/ClockWidget.vue';
-import WeatherWidget from '@/Components/WeatherWidget.vue';
+import ClockWidget from '@/Components/Widgets/ClockWidget.vue';
+import WeatherWidget from '@/Components/Widgets/WeatherWidget.vue';
+import NewsWidget from '@/Components/Widgets/NewsWidget.vue';
+import AppsWidget from '@/Components/Widgets/AppsWidget.vue';
 </script>

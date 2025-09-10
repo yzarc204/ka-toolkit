@@ -1,6 +1,6 @@
 <template>
   <div
-    class="p-6 rounded-2xl border border-blue-200 dark:border-blue-700 shadow-lg hover:shadow-xl transition-all duration-300 relative overflow-hidden"
+    class="h-full p-6 rounded-2xl border border-blue-200 border-slate-200 dark:border-slate-700 hover:shadow-xl transition-all duration-300 relative overflow-hidden flex flex-col"
     :style="backgroundImageStyle">
     <!-- Background Overlay -->
     <div class="absolute inset-0 bg-black/20 dark:bg-black/40 pointer-events-none"></div>
@@ -23,7 +23,7 @@
       </div>
     </div>
 
-    <div class="text-center relative z-10">
+    <div class="text-center relative z-10 flex-grow flex flex-col justify-center">
       <!-- Title -->
       <h3 class="text-lg font-semibold text-blue-700 dark:text-blue-300 mb-4">Weather</h3>
 

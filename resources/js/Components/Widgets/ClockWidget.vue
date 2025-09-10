@@ -1,6 +1,6 @@
 <template>
   <div
-    class="p-6 rounded-2xl bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-900 border border-slate-200 dark:border-slate-700 shadow-lg hover:shadow-xl transition-all duration-300">
+    class="h-full p-6 rounded-2xl bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-900 border border-slate-200 dark:border-slate-700 shadow-lg hover:shadow-xl transition-all duration-300 flex flex-col justify-center">
     <div class="text-center">
       <!-- Title -->
       <h3 class="text-lg font-semibold text-slate-700 dark:text-slate-300 mb-6">Clock</h3>
