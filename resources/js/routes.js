@@ -1,5 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import NotesPage from "@/Pages/Tools/Notes.vue";
+import Error404 from "@/Pages/Errors/404.vue";
+import Error500 from "@/Pages/Errors/500.vue";
 import ToolkitLayout from "@/Layouts/ToolkitLayout.vue";
 import Home from "@/Pages/Home.vue";
 import Login from "@/Pages/Auth/Login.vue";
@@ -40,6 +42,21 @@ const routes = [
         name: "register",
         component: Register,
         meta: { guest: true },
+    },
+    {
+        path: "/404",
+        name: "404",
+        component: Error404,
+    },
+    {
+        path: "/500",
+        name: "500",
+        component: Error500,
+    },
+    {
+        path: "/:pathMatch(.*)*",
+        name: "not-found",
+        component: Error404,
     },
 ];
 

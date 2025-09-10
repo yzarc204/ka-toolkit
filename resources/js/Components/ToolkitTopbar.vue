@@ -15,8 +15,6 @@
     </div>
 
     <div class="relative flex items-center space-x-3">
-      <button class="px-3 py-1.5 rounded-lg bg-indigo-600 text-white text-sm hover:bg-indigo-700">Upgrade</button>
-
       <!-- Dark mode toggle -->
       <button @click="toggleDarkMode"
         class="p-2 rounded-lg hover:bg-light-hover dark:hover:bg-dark-hover transition-colors" title="Toggle dark mode">
