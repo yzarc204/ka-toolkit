@@ -70,6 +70,6 @@ const handleNavigation = async () => {
 
 const items = [
   { to: '/', label: 'Dashboard', icon: '🏠' },
-  { to: '/tools/notes', label: 'Notes', icon: '📝' },
+  { to: '/note', label: 'Notes', icon: '📝' },
 ];
 </script>
