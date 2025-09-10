@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import NotesPage from "@/Pages/Tools/Notes.vue";
+import ChatBotPage from "@/Pages/Tools/ChatBot.vue";
 import Error404 from "@/Pages/Errors/404.vue";
 import Error500 from "@/Pages/Errors/500.vue";
 import ToolkitLayout from "@/Layouts/ToolkitLayout.vue";
@@ -28,6 +29,11 @@ const routes = [
                 name: "note.view",
                 component: NotesPage,
                 props: true,
+            },
+            {
+                path: "chatbot",
+                name: "chatbot",
+                component: ChatBotPage,
             },
         ],
     },

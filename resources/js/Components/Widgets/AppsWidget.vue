@@ -95,7 +95,8 @@ import {
   KeyIcon,
   DocumentIcon,
   PhotoIcon,
-  ScaleIcon
+  ScaleIcon,
+  ChatBubbleLeftRightIcon
 } from '@heroicons/vue/24/outline';
 
 // Reactive data
@@ -116,7 +117,8 @@ const iconComponents = {
   KeyIcon,
   DocumentIcon,
   PhotoIcon,
-  ScaleIcon
+  ScaleIcon,
+  ChatBubbleLeftRightIcon
 };
 
 // Toolkit apps data
@@ -216,6 +218,14 @@ const appsData = [
     category: 'Convert',
     color: '#ea580c',
     route: '/unit-converter'
+  },
+  {
+    id: 13,
+    name: 'Yes/No ChatBot',
+    icon: 'ChatBubbleLeftRightIcon',
+    category: 'AI',
+    color: '#8b5cf6',
+    route: '/chatbot'
   }
 ];
 
