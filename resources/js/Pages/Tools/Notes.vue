@@ -1,16 +1,34 @@
 <template>
-  <div class="flex h-full overflow-hidden">
-    <Sidebar :notes="filteredNotes" :selected-note="selectedNote" :search-query="searchQuery" @select-note="selectNote"
-      @update:searchQuery="searchQuery = $event" @create-note="createNewNote" />
+  <!-- Notes Container -->
+  <div
+    class="h-full bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 flex flex-col min-h-0">
+    <!-- Mobile Header -->
+    <div class="md:hidden p-3 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700">
+      <div class="flex items-center justify-between">
+        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Notes</h2>
+        <button @click="toggleSidebar"
+          class="p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
+          <svg class="w-5 h-5 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
+    </div>
 
-    <Editor :note="selectedNote" :formatting-state="formattingState" @update:title="handleTitleUpdate"
-      @update:content="handleContentUpdate" @format-text="formatText" @update-formatting-state="updateFormattingState"
-      @toggle-public-status="togglePublicStatus" @show-share-modal="showShareModal = true" @delete-note="deleteNote"
-      @copy-link-success="handleCopyLinkSuccess" />
+    <div class="flex flex-col md:flex-row h-full overflow-hidden">
+      <Sidebar :notes="filteredNotes" :selected-note="selectedNote" :search-query="searchQuery"
+        :is-mobile-open="isSidebarOpen" @select-note="selectNote" @update:searchQuery="searchQuery = $event"
+        @create-note="createNewNote" @close="closeSidebar" />
 
-    <ShareModal v-if="showShareModal" :share-email="shareEmail" :shared-users="selectedNote?.shared_with || []"
-      :is-public="selectedNote?.is_public || false" :is-sharing="isSharing" @update:share-email="shareEmail = $event"
-      @share="shareNote" @unshare="unshareNote" @toggle-public="togglePublicStatus" @close="showShareModal = false" />
+      <Editor :note="selectedNote" :formatting-state="formattingState" @update:title="handleTitleUpdate"
+        @update:content="handleContentUpdate" @format-text="formatText" @update-formatting-state="updateFormattingState"
+        @toggle-public-status="togglePublicStatus" @show-share-modal="showShareModal = true" @delete-note="deleteNote"
+        @copy-link-success="handleCopyLinkSuccess" />
+
+      <ShareModal v-if="showShareModal" :share-email="shareEmail" :shared-users="selectedNote?.shared_with || []"
+        :is-public="selectedNote?.is_public || false" :is-sharing="isSharing" @update:share-email="shareEmail = $event"
+        @share="shareNote" @unshare="unshareNote" @toggle-public="togglePublicStatus" @close="showShareModal = false" />
+    </div>
   </div>
 </template>
 
@@ -23,6 +41,7 @@ import ShareModal from '@/Components/Notes/ShareModal.vue';
 import api from '@/services/api';
 import { useAuth } from '@/Composables/useAuth';
 import { useToast } from '@/Composables/useToast';
+import { globalConfirm } from '@/Composables/useConfirm';
 
 // Props for direct note access
 const props = defineProps({
@@ -52,6 +71,9 @@ const searchQuery = ref('');
 const showShareModal = ref(false);
 const shareEmail = ref('');
 const isSharing = ref(false);
+
+// Mobile sidebar state
+const isSidebarOpen = ref(false);
 
 const { success, error, warning } = useToast();
 
@@ -96,6 +118,18 @@ const selectNote = (note) => {
   if (note && note.id) {
     router.push({ name: 'note.view', params: { id: note.id } });
   }
+
+  // Close sidebar on mobile after selecting a note
+  isSidebarOpen.value = false;
+};
+
+// Mobile sidebar methods
+const toggleSidebar = () => {
+  isSidebarOpen.value = !isSidebarOpen.value;
+};
+
+const closeSidebar = () => {
+  isSidebarOpen.value = false;
 };
 
 const createNewNote = async () => {
@@ -182,8 +216,23 @@ const togglePublicStatus = async () => {
 };
 
 const deleteNote = async () => {
-  if (!selectedNote.value || !confirm('Are you sure you want to delete this note?')) return;
+  if (!selectedNote.value) return;
+
   try {
+    const confirmed = await globalConfirm.confirmDanger(
+      'Are you sure you want to delete this note?',
+      {
+        title: 'Delete Note',
+        description: 'This action cannot be undone.',
+        confirmText: 'Delete',
+        cancelText: 'Cancel'
+      }
+    );
+
+    if (!confirmed) return;
+
+    globalConfirm.setLoading(true, 'Deleting note...');
+
     await api.deleteNote(selectedNote.value.id);
     notes.value = notes.value.filter((n) => n.id !== selectedNote.value.id);
     selectedNote.value = null;
@@ -191,6 +240,8 @@ const deleteNote = async () => {
   } catch (err) {
     console.error('Error deleting note:', err);
     error('Failed to delete note. Please try again.');
+  } finally {
+    globalConfirm.setLoading(false);
   }
 };
 

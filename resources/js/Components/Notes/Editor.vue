@@ -1,35 +1,35 @@
 <template>
   <div class="flex-1 bg-light-bg dark:bg-dark-bg overflow-y-auto h-full">
-    <div v-if="note" class="p-6">
+    <div v-if="note" class="p-3 sm:p-4 md:p-6">
       <!-- Title Input -->
-      <div class="mb-6">
+      <div class="mb-4 sm:mb-6">
         <input type="text" :value="note.title" @input="$emit('update:title', $event.target.value)" :disabled="!canEdit"
-          class="w-full text-2xl font-bold border-0 border-b border-light-border dark:border-dark-border pb-2 focus:ring-0 focus:outline-none focus:border-primary-500 bg-transparent text-light-text dark:text-dark-text placeholder-gray-500 dark:placeholder-gray-400"
+          class="w-full text-lg sm:text-xl md:text-2xl font-bold border-0 border-b border-light-border dark:border-dark-border pb-2 focus:ring-0 focus:outline-none focus:border-primary-500 bg-transparent text-light-text dark:text-dark-text placeholder-gray-500 dark:placeholder-gray-400"
           :class="{ 'opacity-50 cursor-not-allowed': !canEdit }" placeholder="Untitled Note" />
       </div>
 
       <!-- Formatting Toolbar -->
       <div v-if="canEdit"
-        class="mb-4 flex flex-wrap gap-1 p-3 bg-light-hover dark:bg-dark-hover rounded-xl border border-light-border dark:border-dark-border">
+        class="mb-3 sm:mb-4 flex flex-wrap gap-1 p-2 sm:p-3 bg-light-hover dark:bg-dark-hover rounded-lg sm:rounded-xl border border-light-border dark:border-dark-border">
         <!-- Text Formatting -->
         <div class="flex gap-1">
           <button @click="formatText('bold')"
-            class="p-2 rounded-lg hover:bg-light-card dark:hover:bg-dark-card transition-colors"
+            class="p-1.5 sm:p-2 rounded-md sm:rounded-lg hover:bg-light-card dark:hover:bg-dark-card transition-colors"
             :class="{ 'bg-primary-100 dark:bg-primary-900 text-primary-700 dark:text-primary-300': formattingState.bold }"
             title="Bold (Ctrl+B)">
-            <BoldIcon class="h-4 w-4" />
+            <BoldIcon class="h-3 w-3 sm:h-4 sm:w-4" />
           </button>
           <button @click="formatText('italic')"
-            class="p-2 rounded-lg hover:bg-light-card dark:hover:bg-dark-card transition-colors"
+            class="p-1.5 sm:p-2 rounded-md sm:rounded-lg hover:bg-light-card dark:hover:bg-dark-card transition-colors"
             :class="{ 'bg-primary-100 dark:bg-primary-900 text-primary-700 dark:text-primary-300': formattingState.italic }"
             title="Italic (Ctrl+I)">
-            <ItalicIcon class="h-4 w-4" />
+            <ItalicIcon class="h-3 w-3 sm:h-4 sm:w-4" />
           </button>
           <button @click="showLinkModal"
-            class="p-2 rounded-lg hover:bg-light-card dark:hover:bg-dark-card transition-colors"
+            class="p-1.5 sm:p-2 rounded-md sm:rounded-lg hover:bg-light-card dark:hover:bg-dark-card transition-colors"
             :class="{ 'bg-primary-100 dark:bg-primary-900 text-primary-700 dark:text-primary-300': formattingState.link }"
             title="Insert Link (Ctrl+K)">
-            <LinkIcon class="h-4 w-4" />
+            <LinkIcon class="h-3 w-3 sm:h-4 sm:w-4" />
           </button>
         </div>
 
@@ -38,22 +38,22 @@
         <!-- Text Alignment -->
         <div class="flex gap-1">
           <button @click="formatText('justifyLeft')"
-            class="p-2 rounded-lg hover:bg-light-card dark:hover:bg-dark-card transition-colors"
+            class="p-1.5 sm:p-2 rounded-md sm:rounded-lg hover:bg-light-card dark:hover:bg-dark-card transition-colors"
             :class="{ 'bg-primary-100 dark:bg-primary-900 text-primary-700 dark:text-primary-300': formattingState.justifyLeft }"
             title="Align Left">
-            <Bars3BottomLeftIcon class="h-4 w-4" />
+            <Bars3BottomLeftIcon class="h-3 w-3 sm:h-4 sm:w-4" />
           </button>
           <button @click="formatText('justifyCenter')"
-            class="p-2 rounded-lg hover:bg-light-card dark:hover:bg-dark-card transition-colors"
+            class="p-1.5 sm:p-2 rounded-md sm:rounded-lg hover:bg-light-card dark:hover:bg-dark-card transition-colors"
             :class="{ 'bg-primary-100 dark:bg-primary-900 text-primary-700 dark:text-primary-300': formattingState.justifyCenter }"
             title="Align Center">
-            <Bars3Icon class="h-4 w-4" />
+            <Bars3Icon class="h-3 w-3 sm:h-4 sm:w-4" />
           </button>
           <button @click="formatText('justifyRight')"
-            class="p-2 rounded-lg hover:bg-light-card dark:hover:bg-dark-card transition-colors"
+            class="p-1.5 sm:p-2 rounded-md sm:rounded-lg hover:bg-light-card dark:hover:bg-dark-card transition-colors"
             :class="{ 'bg-primary-100 dark:bg-primary-900 text-primary-700 dark:text-primary-300': formattingState.justifyRight }"
             title="Align Right">
-            <Bars3BottomRightIcon class="h-4 w-4" />
+            <Bars3BottomRightIcon class="h-3 w-3 sm:h-4 sm:w-4" />
           </button>
         </div>
 
@@ -62,63 +62,64 @@
       </div>
 
       <!-- Content Editor -->
-      <div class="mb-6">
+      <div class="mb-4 sm:mb-6">
         <div ref="contentEditable" :contenteditable="canEdit" @input="handleContentInput" @keydown="handleKeydown"
           @focus="updateFormattingState" @mouseup="updateFormattingState" @paste="handlePaste"
           @click="handleEditorClick" @mousemove="handleMouseMove" @mouseleave="handleMouseLeave"
-          class="w-full min-h-[400px] border-0 focus:ring-0 resize-none bg-transparent text-light-text dark:text-dark-text placeholder-gray-500 dark:placeholder-gray-400 prose prose-sm max-w-none dark:prose-invert"
+          class="w-full min-h-[300px] sm:min-h-[400px] border-0 focus:ring-0 resize-none bg-transparent text-light-text dark:text-dark-text placeholder-gray-500 dark:placeholder-gray-400 prose prose-sm max-w-none dark:prose-invert"
           :class="{ 'cursor-text': !canEdit }" data-placeholder="Start writing your note..."></div>
       </div>
 
       <!-- Action Buttons -->
-      <div class="flex items-center justify-between">
-        <div class="flex items-center space-x-4">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0">
+        <div class="flex flex-wrap items-center gap-2 sm:gap-4">
           <!-- Public/Private status - only show for owners -->
           <button v-if="note.is_owner" @click="$emit('toggle-public-status')"
-            class="flex items-center text-sm opacity-90 hover:opacity-100 transition-opacity">
+            class="flex items-center text-xs sm:text-sm opacity-90 hover:opacity-100 transition-opacity">
             <div v-if="note.is_public" class="flex items-center">
-              <GlobeAltIcon class="h-4 w-4 mr-1" />
-              <span>Public</span>
+              <GlobeAltIcon class="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+              <span class="hidden sm:inline">Public</span>
             </div>
             <div v-else class="flex items-center">
-              <LockClosedIcon class="h-4 w-4 mr-1" />
-              <span>Private</span>
+              <LockClosedIcon class="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+              <span class="hidden sm:inline">Private</span>
             </div>
           </button>
 
           <!-- Show read-only status for shared users -->
-          <div v-if="note.is_shared_with_me" class="flex items-center text-sm opacity-70">
-            <LockClosedIcon class="h-4 w-4 mr-1" />
-            <span>Read Only</span>
+          <div v-if="note.is_shared_with_me" class="flex items-center text-xs sm:text-sm opacity-70">
+            <LockClosedIcon class="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+            <span class="hidden sm:inline">Read Only</span>
           </div>
 
           <button @click="copyNoteLink"
-            class="flex items-center text-sm opacity-90 hover:opacity-100 transition-opacity mr-4">
-            <LinkIcon class="h-4 w-4 mr-1" />
-            <span>Copy Link</span>
+            class="flex items-center text-xs sm:text-sm opacity-90 hover:opacity-100 transition-opacity">
+            <LinkIcon class="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+            <span class="hidden sm:inline">Copy Link</span>
           </button>
 
           <!-- Share button - only for owners -->
           <button v-if="note.is_owner" @click="$emit('show-share-modal')"
-            class="flex items-center text-sm opacity-90 hover:opacity-100 transition-opacity">
-            <UserGroupIcon class="h-4 w-4 mr-1" />
-            <span>Share</span>
+            class="flex items-center text-xs sm:text-sm opacity-90 hover:opacity-100 transition-opacity">
+            <UserGroupIcon class="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+            <span class="hidden sm:inline">Share</span>
           </button>
         </div>
 
         <!-- Delete button - only for owners -->
         <button v-if="note.is_owner" @click="$emit('delete-note')"
-          class="text-sm text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 transition-colors">
-          Delete Note
+          class="text-xs sm:text-sm text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 transition-colors">
+          <span class="hidden sm:inline">Delete Note</span>
+          <span class="sm:hidden">Delete</span>
         </button>
       </div>
     </div>
 
     <!-- Empty State -->
-    <div v-else class="flex items-center justify-center h-full opacity-50">
+    <div v-else class="flex items-center justify-center h-full opacity-50 p-4">
       <div class="text-center">
-        <DocumentTextIcon class="h-16 w-16 mx-auto mb-4 text-gray-400 dark:text-gray-600" />
-        <p class="text-lg text-gray-600 dark:text-gray-400">Select a note to view or create a new one</p>
+        <DocumentTextIcon class="h-12 w-12 sm:h-16 sm:w-16 mx-auto mb-4 text-gray-400 dark:text-gray-600" />
+        <p class="text-sm sm:text-lg text-gray-600 dark:text-gray-400">Select a note to view or create a new one</p>
       </div>
     </div>
 

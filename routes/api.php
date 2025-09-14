@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\TodoController;
 use App\Http\Controllers\NoteController;
 
 /*
@@ -27,6 +28,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('notes', NoteController::class);
     Route::post('notes/{note}/share', [NoteController::class, 'share']);
     Route::post('notes/{note}/unshare', [NoteController::class, 'unshare']);
+
+    // Todo routes
+    Route::apiResource('todos', TodoController::class);
+    Route::post('todos/update-order', [TodoController::class, 'updateOrder']);
 
 
     // Get user by email

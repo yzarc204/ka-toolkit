@@ -9,7 +9,7 @@
     <!-- Content area -->
     <div class="flex-1 flex flex-col min-w-0">
       <ToolkitTopbar @toggle-menu="toggleMenu" />
-      <main class="flex-1 overflow-auto p-4 md:p-6">
+      <main class="flex-1 overflow-auto p-2 sm:p-4 md:p-6">
         <router-view />
       </main>
     </div>
