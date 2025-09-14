@@ -14,7 +14,7 @@
           </div>
           <div class="min-w-0 flex-1">
             <h3 class="text-base sm:text-lg font-medium text-gray-900 dark:text-white truncate">Todo App</h3>
-            <p class="text-xs sm:text-sm text-gray-500 dark:text-gray-400 truncate">Quản lý công việc của bạn</p>
+            <p class="text-xs sm:text-sm text-gray-500 dark:text-gray-400 truncate">Manage your tasks</p>
           </div>
         </div>
 
@@ -23,8 +23,8 @@
           <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
           </svg>
-          <span class="hidden sm:inline">Thêm Todo</span>
-          <span class="sm:hidden">Thêm</span>
+          <span class="hidden sm:inline">Add Todo</span>
+          <span class="sm:hidden">Add</span>
         </button>
       </div>
     </div>

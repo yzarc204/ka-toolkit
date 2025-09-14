@@ -12,7 +12,7 @@
           </svg>
         </div>
         <div class="ml-2 sm:ml-3 min-w-0 flex-1">
-          <p class="text-xs sm:text-sm font-medium text-gray-500 dark:text-gray-400">Tổng cộng</p>
+          <p class="text-xs sm:text-sm font-medium text-gray-500 dark:text-gray-400">Total</p>
           <p class="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white">{{ todoStore.todos.length }}</p>
         </div>
       </div>
@@ -30,7 +30,7 @@
           </svg>
         </div>
         <div class="ml-2 sm:ml-3 min-w-0 flex-1">
-          <p class="text-xs sm:text-sm font-medium text-gray-500 dark:text-gray-400">Đang làm</p>
+          <p class="text-xs sm:text-sm font-medium text-gray-500 dark:text-gray-400">In Progress</p>
           <p class="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white">{{ todoStore.inProgressCount }}</p>
         </div>
       </div>
@@ -47,7 +47,7 @@
           </svg>
         </div>
         <div class="ml-2 sm:ml-3 min-w-0 flex-1">
-          <p class="text-xs sm:text-sm font-medium text-gray-500 dark:text-gray-400">Hoàn thành</p>
+          <p class="text-xs sm:text-sm font-medium text-gray-500 dark:text-gray-400">Completed</p>
           <p class="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white">{{ todoStore.completedCount }}</p>
         </div>
       </div>

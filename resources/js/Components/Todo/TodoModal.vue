@@ -3,7 +3,7 @@
     <div class="bg-light-card dark:bg-dark-card rounded-xl p-6 w-full max-w-md mx-4">
       <div class="flex items-center justify-between mb-4">
         <h3 class="text-lg font-semibold text-light-text dark:text-dark-text">
-          {{ editingTodo ? 'Chỉnh sửa Todo' : 'Thêm Todo mới' }}
+          {{ editingTodo ? 'Edit Todo' : 'Add New Todo' }}
         </h3>
         <button @click="closeModal" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
           <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -15,7 +15,7 @@
       <form @submit.prevent="handleSubmit" class="space-y-4">
         <div>
           <label class="block text-sm font-medium text-light-text dark:text-dark-text mb-2">
-            Tiêu đề *
+            Title *
           </label>
           <input v-model="form.title" type="text" required
             class="w-full px-3 py-2 border border-light-border dark:border-dark-border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-light-input dark:bg-dark-input text-light-text dark:text-dark-text placeholder-gray-500 dark:placeholder-gray-400">
@@ -23,7 +23,7 @@
 
         <div>
           <label class="block text-sm font-medium text-light-text dark:text-dark-text mb-2">
-            Mô tả
+            Description
           </label>
           <textarea v-model="form.description" rows="3"
             class="w-full px-3 py-2 border border-light-border dark:border-dark-border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-light-input dark:bg-dark-input text-light-text dark:text-dark-text placeholder-gray-500 dark:placeholder-gray-400"></textarea>
@@ -32,32 +32,32 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label class="block text-sm font-medium text-light-text dark:text-dark-text mb-2">
-              Trạng thái
+              Status
             </label>
             <select v-model="form.status"
               class="w-full px-3 py-2 border border-light-border dark:border-dark-border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-light-input dark:bg-dark-input text-light-text dark:text-dark-text">
-              <option value="todo">Chưa làm</option>
-              <option value="in_progress">Đang làm</option>
-              <option value="completed">Hoàn thành</option>
+              <option value="todo">To Do</option>
+              <option value="in_progress">In Progress</option>
+              <option value="completed">Completed</option>
             </select>
           </div>
 
           <div>
             <label class="block text-sm font-medium text-light-text dark:text-dark-text mb-2">
-              Độ ưu tiên
+              Priority
             </label>
             <select v-model="form.priority"
               class="w-full px-3 py-2 border border-light-border dark:border-dark-border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-light-input dark:bg-dark-input text-light-text dark:text-dark-text">
-              <option value="low">Thấp</option>
-              <option value="medium">Trung bình</option>
-              <option value="high">Cao</option>
+              <option value="low">Low</option>
+              <option value="medium">Medium</option>
+              <option value="high">High</option>
             </select>
           </div>
         </div>
 
         <div>
           <label class="block text-sm font-medium text-light-text dark:text-dark-text mb-2">
-            Hạn chót
+            Due Date
           </label>
           <input v-model="form.due_date" type="date"
             class="w-full px-3 py-2 border border-light-border dark:border-dark-border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-light-input dark:bg-dark-input text-light-text dark:text-dark-text">
@@ -78,11 +78,11 @@
         <div class="flex justify-end space-x-3 pt-4">
           <button type="button" @click="closeModal"
             class="px-4 py-2 text-gray-700 dark:text-gray-300 bg-gray-200 dark:bg-gray-600 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors">
-            Hủy
+            Cancel
           </button>
           <button type="submit" :disabled="todoStore.loading"
             class="px-4 py-2 bg-primary-600 hover:bg-primary-700 disabled:bg-gray-400 text-white rounded-lg transition-colors">
-            {{ todoStore.loading ? 'Đang lưu...' : 'Lưu' }}
+            {{ todoStore.loading ? 'Saving...' : 'Save' }}
           </button>
         </div>
       </form>

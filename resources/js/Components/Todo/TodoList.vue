@@ -1,12 +1,12 @@
 <template>
   <div class="bg-gray-50 dark:bg-gray-700 rounded-lg">
     <div class="p-3 sm:p-4 border-b border-gray-200 dark:border-gray-600">
-      <h2 class="text-base sm:text-lg font-semibold text-gray-900 dark:text-white">Danh sách công việc</h2>
+      <h2 class="text-base sm:text-lg font-semibold text-gray-900 dark:text-white">Task List</h2>
     </div>
 
     <div v-if="todoStore.loading" class="p-6 sm:p-8 text-center">
       <div class="inline-block animate-spin rounded-full h-6 w-6 sm:h-8 sm:w-8 border-b-2 border-blue-500"></div>
-      <p class="mt-2 text-sm sm:text-base text-gray-500 dark:text-gray-400">Đang tải...</p>
+      <p class="mt-2 text-sm sm:text-base text-gray-500 dark:text-gray-400">Loading...</p>
     </div>
 
     <div v-else-if="todoStore.todos.length === 0" class="p-6 sm:p-8 text-center">
@@ -15,8 +15,8 @@
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
           d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
       </svg>
-      <p class="text-sm sm:text-base text-gray-500 dark:text-gray-400 mb-1 sm:mb-2">Chưa có công việc nào</p>
-      <p class="text-xs sm:text-sm text-gray-400 dark:text-gray-500">Nhấn "Thêm Todo" để bắt đầu</p>
+      <p class="text-sm sm:text-base text-gray-500 dark:text-gray-400 mb-1 sm:mb-2">No tasks yet</p>
+      <p class="text-xs sm:text-sm text-gray-400 dark:text-gray-500">Click "Add Todo" to get started</p>
     </div>
 
     <div v-else class="divide-y divide-gray-200 dark:divide-gray-600" ref="todoListRef">

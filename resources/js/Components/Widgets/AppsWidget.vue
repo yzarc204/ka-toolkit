@@ -33,7 +33,7 @@
 
 
     <!-- Apps Grid -->
-    <div class="flex-grow overflow-y-auto">
+    <div class="flex-grow overflow-y-auto apps-scrollable">
       <div v-if="filteredTools.length > 0" class="grid grid-cols-3 gap-3">
         <div v-for="tool in filteredTools" :key="tool.id" class="group cursor-pointer" @click="openApp(tool)">
           <div class="p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-all duration-200 text-center">
@@ -96,3 +96,31 @@ const openApp = (tool) => {
   router.push(tool.route);
 };
 </script>
+
+<style scoped>
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Custom scrollbar - same as NewsWidget */
+.apps-scrollable::-webkit-scrollbar {
+  width: 4px;
+}
+
+.apps-scrollable::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.apps-scrollable::-webkit-scrollbar-thumb {
+  background: #cbd5e0;
+  border-radius: 2px;
+}
+
+.dark .apps-scrollable::-webkit-scrollbar-thumb {
+  background: #4a5568;
+}
+</style>

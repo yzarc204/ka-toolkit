@@ -106,18 +106,18 @@ const handleToggle = async () => {
 const handleDelete = async () => {
   try {
     const confirmed = await globalConfirm.confirmDanger(
-      'Bạn có chắc chắn muốn xóa todo này?',
+      'Are you sure you want to delete this todo?',
       {
-        title: 'Xóa Todo',
-        description: 'Hành động này không thể hoàn tác.',
-        confirmText: 'Xóa',
-        cancelText: 'Hủy'
+        title: 'Delete Todo',
+        description: 'This action cannot be undone.',
+        confirmText: 'Delete',
+        cancelText: 'Cancel'
       }
     );
 
     if (!confirmed) return;
 
-    globalConfirm.setLoading(true, 'Đang xóa...');
+    globalConfirm.setLoading(true, 'Deleting...');
 
     await todoStore.deleteTodo(props.todo.id);
     emit('delete', props.todo);
@@ -140,11 +140,11 @@ const getPriorityClass = (priority) => {
 
 const getPriorityText = (priority) => {
   const texts = {
-    low: 'Thấp',
-    medium: 'Trung bình',
-    high: 'Cao'
+    low: 'Low',
+    medium: 'Medium',
+    high: 'High'
   };
-  return texts[priority] || 'Trung bình';
+  return texts[priority] || 'Medium';
 };
 
 const getStatusClass = (status) => {
@@ -158,11 +158,11 @@ const getStatusClass = (status) => {
 
 const getStatusText = (status) => {
   const texts = {
-    todo: 'Chưa làm',
-    in_progress: 'Đang làm',
-    completed: 'Hoàn thành'
+    todo: 'To Do',
+    in_progress: 'In Progress',
+    completed: 'Completed'
   };
-  return texts[status] || 'Chưa làm';
+  return texts[status] || 'To Do';
 };
 
 const formatDate = (dateString) => {
