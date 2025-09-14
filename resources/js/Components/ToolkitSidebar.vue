@@ -71,5 +71,6 @@ const handleNavigation = async () => {
 const items = [
   { to: '/', label: 'Dashboard', icon: '🏠' },
   { to: '/note', label: 'Notes', icon: '📝' },
+  { to: '/chatbot', label: 'Yes/No Bot', icon: '🤖' },
 ];
 </script>
