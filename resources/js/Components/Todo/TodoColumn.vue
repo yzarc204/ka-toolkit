@@ -6,8 +6,7 @@
     <div class="p-3 sm:p-4 border-b border-gray-200 dark:border-gray-600">
       <div class="flex items-center justify-between">
         <h3 class="text-base sm:text-lg font-semibold text-gray-900 dark:text-white">{{ title }}</h3>
-        <span
-          class="text-xs sm:text-sm text-gray-500 dark:text-gray-400 bg-gray-200 dark:bg-gray-600 px-2 py-1 rounded-full">
+        <span :class="getBadgeClasses()" class="text-xs sm:text-sm px-2 py-1 rounded-full font-medium">
           {{ todos.length }}
         </span>
       </div>
@@ -68,6 +67,24 @@ const emit = defineEmits(['add-todo', 'edit-todo', 'delete-todo', 'move-todo', '
 
 const todoStore = useTodoStore();
 const columnRef = ref();
+
+// Badge color classes based on column status
+const getBadgeClasses = () => {
+  const baseClasses = 'text-xs sm:text-sm px-2 py-1 rounded-full font-medium';
+
+  switch (props.status) {
+    case 'todo':
+      return `${baseClasses} text-blue-700 dark:text-blue-300 bg-blue-100 dark:bg-blue-900/30`;
+    case 'in_progress':
+      return `${baseClasses} text-yellow-700 dark:text-yellow-300 bg-yellow-100 dark:bg-yellow-900/30`;
+    case 'completed':
+      return `${baseClasses} text-green-700 dark:text-green-300 bg-green-100 dark:bg-green-900/30`;
+    case 'deadline':
+      return `${baseClasses} text-red-700 dark:text-red-300 bg-red-100 dark:bg-red-900/30`;
+    default:
+      return `${baseClasses} text-gray-500 dark:text-gray-400 bg-gray-200 dark:bg-gray-600`;
+  }
+};
 
 // Throttle drag over logging
 let lastDragOverLog = 0;
