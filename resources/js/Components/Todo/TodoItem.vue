@@ -165,7 +165,8 @@ const handleDragStart = (event) => {
     todoTitle: props.todo.title,
     fromStatus: props.todo.status,
     priority: props.todo.priority,
-    description: props.todo.description
+    description: props.todo.description,
+    order: props.todo.order
   }));
   event.dataTransfer.effectAllowed = 'move';
 

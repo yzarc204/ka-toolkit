@@ -164,10 +164,6 @@ const getAddTaskButtonClasses = () => {
   }
 };
 
-// Throttle drag over logging
-let lastDragOverLog = 0;
-const DRAG_OVER_THROTTLE = 100; // ms
-
 // Drop indicator functions
 const addDropIndicator = (dropZone, event) => {
   // Remove existing indicator
@@ -225,7 +221,7 @@ const handleDragOver = (event) => {
   if (dropZone) {
     dropZone.classList.add('drag-over');
 
-    // Add drop indicator only for todo container
+    // Add drop indicator for todo container
     if (todoContainer) {
       addDropIndicator(todoContainer, event);
     }
@@ -283,27 +279,73 @@ const handleDrop = (event) => {
 
   try {
     const data = JSON.parse(event.dataTransfer.getData('text/plain'));
-    const { todoId, todoTitle, fromStatus } = data;
+    const { todoId, fromStatus } = data;
 
-    console.log('Drop event:', {
-      todoId,
-      todoTitle,
-      fromStatus,
-      toStatus: props.status,
-      column: column.className
-    });
 
     if (fromStatus !== props.status) {
-      // Find the todo in the store
+      // Cross-column move - emit move-todo event
       const todo = todoStore.todos.find(t => t.id === todoId);
       if (todo) {
         emit('move-todo', todo, props.status);
-        // Emit drop completed event to hide drag preview
         emit('drop-completed');
       }
+    } else {
+      // Same column reorder - handle reordering
+      handleReorder(event, todoId);
     }
   } catch (error) {
     console.error('Error parsing drag data:', error);
+  }
+};
+
+// Handle reordering within the same column
+const handleReorder = async (event, draggedTodoId) => {
+  try {
+    const todoContainer = event.currentTarget.querySelector('.todo-items-container');
+    if (!todoContainer) return;
+
+    // Get all todo items in the container
+    const todoItems = Array.from(todoContainer.querySelectorAll('.todo-item'));
+    const dropY = event.clientY;
+
+    // Find the drop position
+    let dropIndex = todoItems.length;
+    for (let i = 0; i < todoItems.length; i++) {
+      const rect = todoItems[i].getBoundingClientRect();
+      if (dropY < rect.top + rect.height / 2) {
+        dropIndex = i;
+        break;
+      }
+    }
+
+    // Get current todos in this column sorted by order
+    const currentTodos = [...props.todos].sort((a, b) => a.order - b.order);
+    const draggedTodo = currentTodos.find(t => t.id === draggedTodoId);
+
+    if (!draggedTodo) return;
+
+    // Remove dragged todo from the list
+    const todosWithoutDragged = currentTodos.filter(t => t.id !== draggedTodoId);
+
+    // Insert at new position
+    const reorderedTodos = [
+      ...todosWithoutDragged.slice(0, dropIndex),
+      draggedTodo,
+      ...todosWithoutDragged.slice(dropIndex)
+    ];
+
+    // Update order values
+    const todosToUpdate = reorderedTodos.map((todo, index) => ({
+      id: todo.id,
+      order: index + 1
+    }));
+
+    // Update order in database
+    await todoStore.updateTodoOrder(todosToUpdate);
+
+    emit('drop-completed');
+  } catch (error) {
+    console.error('Error reordering todos:', error);
   }
 };
 
