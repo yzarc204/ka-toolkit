@@ -121,10 +121,10 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { UserIcon } from '@heroicons/vue/24/solid';
-import { useAuth } from '@/Composables/useAuth';
+import { useAuthStore } from '@/stores/auth';
 
 const router = useRouter();
-const { register } = useAuth();
+const authStore = useAuthStore();
 const loading = ref(false);
 const errorMessage = ref('');
 const fieldErrors = ref({
@@ -155,7 +155,7 @@ const handleRegister = async () => {
     clearErrors();
 
     try {
-        await register(form.value);
+        await authStore.register(form.value);
         router.push('/');
     } catch (error) {
         console.error('Registration failed:', error);

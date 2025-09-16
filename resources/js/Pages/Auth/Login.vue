@@ -86,10 +86,10 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { LockClosedIcon } from '@heroicons/vue/24/solid';
-import { useAuth } from '@/Composables/useAuth';
+import { useAuthStore } from '@/stores/auth';
 
 const router = useRouter();
-const { login } = useAuth();
+const authStore = useAuthStore();
 const loading = ref(false);
 const errorMessage = ref('');
 const form = ref({
@@ -101,7 +101,7 @@ const handleLogin = async () => {
     loading.value = true;
     errorMessage.value = '';
     try {
-        await login(form.value);
+        await authStore.login(form.value);
         router.push('/');
     } catch (error) {
         console.error('Login failed:', error);

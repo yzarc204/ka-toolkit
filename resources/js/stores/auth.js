@@ -32,7 +32,7 @@ export const useAuthStore = defineStore("auth", {
 
             try {
                 const response = await api.login(credentials);
-                this.token = response.token;
+                this.token = response.access_token;
                 this.user = response.user;
 
                 localStorage.setItem("token", this.token);
@@ -52,7 +52,7 @@ export const useAuthStore = defineStore("auth", {
 
             try {
                 const response = await api.register(userData);
-                this.token = response.token;
+                this.token = response.access_token;
                 this.user = response.user;
 
                 localStorage.setItem("token", this.token);
