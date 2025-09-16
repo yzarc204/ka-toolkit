@@ -9,6 +9,10 @@ export const useTodoStore = defineStore("todo", () => {
     const error = ref(null);
 
     // Getters
+    const todoCount = computed(
+        () => todos.value.filter((todo) => todo.status === "todo").length
+    );
+
     const inProgressCount = computed(
         () => todos.value.filter((todo) => todo.status === "in_progress").length
     );
@@ -17,8 +21,8 @@ export const useTodoStore = defineStore("todo", () => {
         () => todos.value.filter((todo) => todo.status === "completed").length
     );
 
-    const todoCount = computed(
-        () => todos.value.filter((todo) => todo.status === "todo").length
+    const deadlineCount = computed(
+        () => todos.value.filter((todo) => todo.status === "deadline").length
     );
 
     const todosByStatus = computed(() => ({
@@ -27,6 +31,7 @@ export const useTodoStore = defineStore("todo", () => {
             (todo) => todo.status === "in_progress"
         ),
         completed: todos.value.filter((todo) => todo.status === "completed"),
+        deadline: todos.value.filter((todo) => todo.status === "deadline"),
     }));
 
     // Actions
@@ -143,9 +148,10 @@ export const useTodoStore = defineStore("todo", () => {
         error,
 
         // Getters
+        todoCount,
         inProgressCount,
         completedCount,
-        todoCount,
+        deadlineCount,
         todosByStatus,
 
         // Actions
@@ -153,8 +159,6 @@ export const useTodoStore = defineStore("todo", () => {
         createTodo,
         updateTodo,
         deleteTodo,
-        toggleTodoStatus,
-        updateTodoOrder,
         clearError,
     };
 });

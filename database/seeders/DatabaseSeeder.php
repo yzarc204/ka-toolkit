@@ -12,6 +12,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        // Create test user
+        $this->call(TestUserSeeder::class);
+
+        // Create sample todos for test user
+        $this->call(SampleTodosSeeder::class);
+
         // \App\Models\User::factory(10)->create();
 
         // \App\Models\User::factory()->create([

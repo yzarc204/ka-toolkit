@@ -32,7 +32,7 @@ class TodoController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'status' => ['nullable', Rule::in(['todo', 'in_progress', 'completed'])],
+            'status' => ['nullable', Rule::in(['todo', 'in_progress', 'completed', 'deadline'])],
             'priority' => ['nullable', Rule::in(['low', 'medium', 'high'])],
             'due_date' => 'nullable|date|after_or_equal:today',
         ]);
@@ -69,7 +69,7 @@ class TodoController extends Controller
         $validated = $request->validate([
             'title' => 'sometimes|string|max:255',
             'description' => 'nullable|string',
-            'status' => ['sometimes', Rule::in(['todo', 'in_progress', 'completed'])],
+            'status' => ['sometimes', Rule::in(['todo', 'in_progress', 'completed', 'deadline'])],
             'priority' => ['sometimes', Rule::in(['low', 'medium', 'high'])],
             'due_date' => 'nullable|date|after_or_equal:today',
             'order' => 'sometimes|integer|min:0',
