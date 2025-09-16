@@ -1,5 +1,6 @@
 import { ref } from "vue";
-import axios from "axios";
+// Use window.axios to ensure we use the same instance with interceptors
+const axios = window.axios;
 
 const user = ref(null);
 const token = ref(null);
@@ -27,6 +28,15 @@ initializeToken();
 
 export function useAuth() {
     const login = async (credentials) => {
+        // Clear any existing token before attempting login
+        // This prevents issues with expired tokens
+        try {
+            localStorage.removeItem("token");
+            delete axios.defaults.headers.common["Authorization"];
+        } catch (error) {
+            console.log("⚠️ useAuth - Error clearing token:", error);
+        }
+
         try {
             const response = await axios.post("/api/login", credentials);
             token.value = response.data.access_token;
@@ -46,6 +56,17 @@ export function useAuth() {
             ] = `Bearer ${token.value}`;
             return response.data;
         } catch (error) {
+            // Ensure token is cleared on login failure
+            try {
+                localStorage.removeItem("token");
+                delete axios.defaults.headers.common["Authorization"];
+            } catch (clearError) {
+                console.log(
+                    "⚠️ useAuth - Error clearing token after failure:",
+                    clearError
+                );
+            }
+
             throw error;
         }
     };

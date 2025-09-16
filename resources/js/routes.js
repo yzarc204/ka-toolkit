@@ -105,8 +105,18 @@ router.beforeEach((to, from, next) => {
         } else {
             next();
         }
-    } else if (to.matched.some((record) => record.meta.guest) && token) {
-        next("/");
+    } else if (to.matched.some((record) => record.meta.guest)) {
+        // For guest routes, we need to be more careful
+        if (token) {
+            // Don't redirect if we're on login page and coming from login (failed login)
+            if (to.path === "/login" && from.path === "/login") {
+                next();
+            } else {
+                next("/");
+            }
+        } else {
+            next();
+        }
     } else {
         next();
     }

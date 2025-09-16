@@ -28,8 +28,11 @@ window.axios.interceptors.response.use(
             localStorage.removeItem("token");
             delete window.axios.defaults.headers.common["Authorization"];
 
-            // Redirect to login page
-            window.location.href = "/login";
+            // Only redirect to login if not already on login page
+            // This prevents redirect loop when login fails
+            if (window.location.pathname !== "/login") {
+                window.location.href = "/login";
+            }
         }
         return Promise.reject(error);
     }
