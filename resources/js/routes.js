@@ -2,7 +2,6 @@ import { createRouter, createWebHistory } from "vue-router";
 import NotesPage from "@/Pages/Tools/Notes.vue";
 import ChatBotPage from "@/Pages/Tools/ChatBot.vue";
 import TodoAppPage from "@/Pages/Tools/TodoApp.vue";
-import ConfirmTestPage from "@/Pages/Tools/ConfirmTest.vue";
 import ToolsStoreTestPage from "@/Pages/Tools/ToolsStoreTest.vue";
 import TopbarSearchDemoPage from "@/Pages/Tools/TopbarSearchDemo.vue";
 import Error404 from "@/Pages/Errors/404.vue";
@@ -43,11 +42,6 @@ const routes = [
                 path: "todo",
                 name: "todo",
                 component: TodoAppPage,
-            },
-            {
-                path: "confirm-test",
-                name: "confirm-test",
-                component: ConfirmTestPage,
             },
             {
                 path: "tools-store-test",

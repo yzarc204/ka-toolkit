@@ -5,7 +5,6 @@ import {
     ChatBubbleLeftRightIcon,
     ClipboardDocumentListIcon,
     CogIcon,
-    QuestionMarkCircleIcon,
 } from "@heroicons/vue/24/outline";
 
 export const useToolsStore = defineStore("tools", () => {
@@ -23,17 +22,6 @@ export const useToolsStore = defineStore("tools", () => {
             tags: ["ghi chú", "tài liệu", "productivity"],
         },
         {
-            id: "chatbot",
-            name: "Yes/No Bot",
-            description: "Trợ lý AI trả lời câu hỏi yes/no",
-            icon: "ChatBubbleLeftRightIcon",
-            color: "#10B981",
-            route: "/chatbot",
-            isActive: true,
-            order: 2,
-            tags: ["ai", "chatbot", "trợ lý"],
-        },
-        {
             id: "todo",
             name: "Todo App",
             description: "Quản lý công việc và nhiệm vụ",
@@ -45,15 +33,15 @@ export const useToolsStore = defineStore("tools", () => {
             tags: ["todo", "công việc", "nhiệm vụ"],
         },
         {
-            id: "confirm-test",
-            name: "Confirm Test",
-            description: "Test confirm modal functionality",
-            icon: "QuestionMarkCircleIcon",
-            color: "#8B5CF6",
-            route: "/confirm-test",
+            id: "chatbot",
+            name: "Yes/No Bot",
+            description: "Trợ lý AI trả lời câu hỏi yes/no",
+            icon: "ChatBubbleLeftRightIcon",
+            color: "#10B981",
+            route: "/chatbot",
             isActive: true,
-            order: 4,
-            tags: ["test", "modal", "development"],
+            order: 2,
+            tags: ["ai", "chatbot", "trợ lý"],
         },
     ]);
 
@@ -65,7 +53,6 @@ export const useToolsStore = defineStore("tools", () => {
         ChatBubbleLeftRightIcon,
         ClipboardDocumentListIcon,
         CogIcon,
-        QuestionMarkCircleIcon,
     };
 
     // Getters

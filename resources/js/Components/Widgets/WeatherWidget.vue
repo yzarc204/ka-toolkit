@@ -1,6 +1,6 @@
 <template>
   <div
-    class="h-full p-6 rounded-2xl border border-blue-200 border-slate-200 dark:border-slate-700 hover:shadow-xl transition-all duration-300 relative overflow-hidden flex flex-col"
+    class="h-full p-6 rounded-2xl border border-blue-200 dark:border-slate-700 hover:shadow-xl transition-all duration-300 relative overflow-hidden flex flex-col"
     :style="backgroundImageStyle">
     <!-- Background Overlay -->
     <div class="absolute inset-0 bg-black/20 dark:bg-black/40 pointer-events-none"></div>
@@ -332,9 +332,6 @@ const updateBackgroundStyle = (condition) => {
   // Get weather GIF based on condition
   const weatherGif = weatherGifs[condition] || weatherGifs.default;
 
-  console.log('Setting background for condition:', condition, 'GIF:', weatherGif);
-  console.log('Available weatherGifs:', weatherGifs);
-
   if (weatherGif) {
     backgroundImageStyle.value = {
       backgroundImage: `url(${weatherGif})`,
@@ -342,9 +339,7 @@ const updateBackgroundStyle = (condition) => {
       backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat'
     };
-    console.log('Background style set:', backgroundImageStyle.value);
   } else {
-    console.log('No GIF found, using gradient fallback');
     // Enhanced gradient fallback based on weather condition
     const gradients = {
       'Clear': 'linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)', // Sunny
