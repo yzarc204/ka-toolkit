@@ -1,9 +1,11 @@
 <template>
-  <div class="bg-gray-50 dark:bg-gray-700 rounded-lg flex flex-col min-h-0" :data-column="status"
-    @dragover.prevent="handleDragOver" @dragleave="handleDragLeave" @drop.prevent="handleDrop"
+  <div
+    class="bg-gradient-to-br from-slate-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 rounded-lg flex flex-col min-h-0 shadow-sm border border-gray-200/50 dark:border-gray-700/50"
+    :data-column="status" @dragover.prevent="handleDragOver" @dragleave="handleDragLeave" @drop.prevent="handleDrop"
     style="border: 2px solid transparent; transition: border-color 0.3s ease;">
     <!-- Column Header -->
-    <div class="p-3 sm:p-4 border-b border-gray-200 dark:border-gray-600">
+    <div
+      class="p-3 sm:p-4 border-b border-gray-200/60 dark:border-gray-600/60 bg-white/30 dark:bg-gray-800/30 backdrop-blur-sm">
       <div class="flex items-center justify-between">
         <h3 class="text-base sm:text-lg font-semibold text-gray-900 dark:text-white">{{ title }}</h3>
         <span :class="getBadgeClasses()" class="text-xs sm:text-sm px-2 py-1 rounded-full font-medium">
@@ -13,23 +15,23 @@
     </div>
 
     <!-- Column Content -->
-    <div class="flex-1 overflow-y-auto p-2 sm:p-3">
+    <div class="flex-1 overflow-y-auto p-2 sm:p-3 bg-white/20 dark:bg-gray-800/20">
       <!-- Loading State -->
       <div v-if="todoStore.loading" class="flex items-center justify-center h-32">
         <div class="inline-block animate-spin rounded-full h-6 w-6 border-b-2 border-blue-500"></div>
       </div>
 
       <!-- Empty State -->
-      <div v-else-if="todos.length === 0"
-        class="flex flex-col items-center justify-center h-32 text-center border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg m-2 empty-drop-zone">
-        <svg class="w-8 h-8 text-gray-400 dark:text-gray-500 mb-2" fill="none" stroke="currentColor"
+      <div v-else-if="todos.length === 0" :class="getEmptyZoneClasses()"
+        class="flex flex-col items-center justify-center h-32 text-center border-2 border-dashed rounded-lg m-2 empty-drop-zone">
+        <svg :class="getEmptyZoneIconClasses()" class="w-8 h-8 mb-2" fill="none" stroke="currentColor"
           viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
             d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
         </svg>
-        <p class="text-xs sm:text-sm text-gray-500 dark:text-gray-400">No tasks</p>
-        <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">Drop tasks here</p>
-        <button @click="$emit('add-todo')" class="mt-2 text-xs text-blue-600 dark:text-blue-400 hover:underline">
+        <p :class="getEmptyZoneTextClasses()" class="text-xs sm:text-sm">No tasks</p>
+        <p :class="getEmptyZoneSubtextClasses()" class="text-xs mt-1">Drop tasks here</p>
+        <button @click="$emit('add-todo')" :class="getAddTaskButtonClasses()" class="mt-2 text-xs hover:underline">
           Add task
         </button>
       </div>
@@ -83,6 +85,82 @@ const getBadgeClasses = () => {
       return `${baseClasses} text-red-700 dark:text-red-300 bg-red-100 dark:bg-red-900/30`;
     default:
       return `${baseClasses} text-gray-500 dark:text-gray-400 bg-gray-200 dark:bg-gray-600`;
+  }
+};
+
+// Empty zone color classes based on column status
+const getEmptyZoneClasses = () => {
+  switch (props.status) {
+    case 'todo':
+      return 'border-blue-300 dark:border-blue-600 bg-blue-50/50 dark:bg-blue-900/10';
+    case 'in_progress':
+      return 'border-yellow-300 dark:border-yellow-600 bg-yellow-50/50 dark:bg-yellow-900/10';
+    case 'completed':
+      return 'border-green-300 dark:border-green-600 bg-green-50/50 dark:bg-green-900/10';
+    case 'deadline':
+      return 'border-red-300 dark:border-red-600 bg-red-50/50 dark:bg-red-900/10';
+    default:
+      return 'border-gray-300 dark:border-gray-600 bg-gray-50/50 dark:bg-gray-900/10';
+  }
+};
+
+const getEmptyZoneIconClasses = () => {
+  switch (props.status) {
+    case 'todo':
+      return 'text-blue-400 dark:text-blue-500';
+    case 'in_progress':
+      return 'text-yellow-400 dark:text-yellow-500';
+    case 'completed':
+      return 'text-green-400 dark:text-green-500';
+    case 'deadline':
+      return 'text-red-400 dark:text-red-500';
+    default:
+      return 'text-gray-400 dark:text-gray-500';
+  }
+};
+
+const getEmptyZoneTextClasses = () => {
+  switch (props.status) {
+    case 'todo':
+      return 'text-blue-600 dark:text-blue-400';
+    case 'in_progress':
+      return 'text-yellow-600 dark:text-yellow-400';
+    case 'completed':
+      return 'text-green-600 dark:text-green-400';
+    case 'deadline':
+      return 'text-red-600 dark:text-red-400';
+    default:
+      return 'text-gray-500 dark:text-gray-400';
+  }
+};
+
+const getEmptyZoneSubtextClasses = () => {
+  switch (props.status) {
+    case 'todo':
+      return 'text-blue-500 dark:text-blue-500';
+    case 'in_progress':
+      return 'text-yellow-500 dark:text-yellow-500';
+    case 'completed':
+      return 'text-green-500 dark:text-green-500';
+    case 'deadline':
+      return 'text-red-500 dark:text-red-500';
+    default:
+      return 'text-gray-400 dark:text-gray-500';
+  }
+};
+
+const getAddTaskButtonClasses = () => {
+  switch (props.status) {
+    case 'todo':
+      return 'text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300';
+    case 'in_progress':
+      return 'text-yellow-600 dark:text-yellow-400 hover:text-yellow-700 dark:hover:text-yellow-300';
+    case 'completed':
+      return 'text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300';
+    case 'deadline':
+      return 'text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300';
+    default:
+      return 'text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300';
   }
 };
 

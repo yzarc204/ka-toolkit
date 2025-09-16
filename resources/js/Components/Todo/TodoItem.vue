@@ -1,11 +1,11 @@
 <template>
   <div
-    class="todo-item bg-white dark:bg-gray-800 rounded-lg p-3 sm:p-4 border border-gray-200 dark:border-gray-600 hover:shadow-md transition-all duration-200 cursor-move"
+    class="todo-item bg-white dark:bg-gray-800 rounded-lg p-3 sm:p-4 border border-gray-200 dark:border-gray-600 shadow-sm hover:shadow-lg hover:shadow-blue-500/10 dark:hover:shadow-blue-400/20 transition-all duration-300 cursor-move"
     draggable="true" @dragstart="handleDragStart" @dragend="handleDragEnd">
     <div class="flex items-start space-x-3">
       <!-- Drag Handle -->
       <div
-        class="cursor-move flex-shrink-0 mt-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded p-1 transition-colors">
+        class="cursor-move flex-shrink-0 mt-1 hover:bg-gray-100 dark:hover:bg-gray-700 hover:shadow-sm rounded p-1 transition-all duration-200">
         <svg class="w-4 h-4 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300"
           fill="currentColor" viewBox="0 0 20 20">
           <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
@@ -197,7 +197,7 @@ const handleDragEnd = (event) => {
 /* Native drag styles */
 .todo-item[draggable="true"]:hover {
   transform: scale(1.02);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 10px 30px rgba(59, 130, 246, 0.15), 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .todo-item[draggable="true"]:active {
