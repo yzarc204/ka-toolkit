@@ -30,7 +30,7 @@
         class="flex items-center px-3 py-2 rounded-xl hover:bg-light-hover dark:hover:bg-dark-hover transition"
         :class="{ 'bg-light-hover dark:bg-dark-hover': $route.path === '/' }" @click="handleNavigation">
         <span class="mr-3 text-gray-500">🏠</span>
-        <span class="text-sm font-medium">Trang chủ</span>
+        <span class="text-sm font-medium">Home</span>
       </RouterLink>
 
       <!-- Grouped Tools Links -->

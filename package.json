@@ -18,8 +18,10 @@
         "vue": "^3.4.0"
     },
     "dependencies": {
+        "@harshit_01/ai-bg-remover": "^1.0.2",
         "@headlessui/vue": "^1.7.23",
         "@heroicons/vue": "^2.2.0",
+        "@imgly/background-removal": "^1.7.0",
         "@vueuse/integrations": "^13.9.0",
         "pinia": "^3.0.3",
         "sortablejs": "^1.15.6",
