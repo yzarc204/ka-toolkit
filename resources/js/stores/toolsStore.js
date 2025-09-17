@@ -13,34 +13,34 @@ export const useToolsStore = defineStore("tools", () => {
         {
             id: "notes",
             name: "Notes",
-            description: "Ghi chú và quản lý tài liệu",
             icon: "DocumentTextIcon",
             color: "#3B82F6",
             route: "/note",
             isActive: true,
             order: 1,
+            category: "productivity",
             tags: ["ghi chú", "tài liệu", "productivity"],
         },
         {
             id: "todo",
             name: "Todo App",
-            description: "Quản lý công việc và nhiệm vụ",
             icon: "ClipboardDocumentListIcon",
             color: "#F59E0B",
             route: "/todo",
             isActive: true,
             order: 3,
+            category: "productivity",
             tags: ["todo", "công việc", "nhiệm vụ"],
         },
         {
             id: "chatbot",
             name: "Yes/No Bot",
-            description: "Trợ lý AI trả lời câu hỏi yes/no",
             icon: "ChatBubbleLeftRightIcon",
             color: "#10B981",
             route: "/chatbot",
             isActive: true,
             order: 2,
+            category: "decision",
             tags: ["ai", "chatbot", "trợ lý"],
         },
     ]);
@@ -78,17 +78,43 @@ export const useToolsStore = defineStore("tools", () => {
         return filtered.sort((a, b) => a.order - b.order);
     });
 
+    const groupedTools = computed(() => {
+        const groups = {};
+
+        activeTools.value.forEach((tool) => {
+            const category = tool.category || "other";
+            if (!groups[category]) {
+                groups[category] = [];
+            }
+            groups[category].push(tool);
+        });
+
+        // Sort tools within each group by order
+        Object.keys(groups).forEach((category) => {
+            groups[category].sort((a, b) => a.order - b.order);
+        });
+
+        return groups;
+    });
+
+    const categoryLabels = {
+        productivity: "Productivity",
+        decision: "Decision",
+        utility: "Utilities",
+        other: "Other",
+    };
+
     // Actions
     const addTool = (tool) => {
         const newTool = {
             id: tool.id || `tool_${Date.now()}`,
             name: tool.name,
-            description: tool.description || "",
             icon: tool.icon || "CogIcon",
             color: tool.color || "#6B7280",
             route: tool.route || "/",
             isActive: tool.isActive !== false,
             order: tool.order || tools.value.length + 1,
+            category: tool.category || "other",
             tags: tool.tags || [],
         };
 
@@ -157,10 +183,12 @@ export const useToolsStore = defineStore("tools", () => {
         tools,
         searchQuery,
         iconComponents,
+        categoryLabels,
 
         // Getters
         activeTools,
         filteredTools,
+        groupedTools,
         stats,
 
         // Actions

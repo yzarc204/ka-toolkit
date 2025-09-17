@@ -49,9 +49,9 @@
               {{ tool.name }}
             </div>
 
-            <!-- App Description -->
-            <div class="text-xs text-gray-500 dark:text-gray-400 mt-1 line-clamp-2">
-              {{ tool.description }}
+            <!-- App Category -->
+            <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+              {{ toolsStore.categoryLabels[tool.category] || tool.category }}
             </div>
           </div>
         </div>
@@ -73,8 +73,8 @@
     <!-- Footer -->
     <div class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
       <div class="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
-        <span>{{ toolsStore.stats.active }} tools hoạt động</span>
-        <span>{{ toolsStore.stats.total }} tổng cộng</span>
+        <span>{{ toolsStore.stats.active }} active tools</span>
+        <span>{{ toolsStore.stats.total }} total tools</span>
       </div>
     </div>
   </div>

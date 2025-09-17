@@ -31,15 +31,20 @@
         </svg>
         <p :class="getEmptyZoneTextClasses()" class="text-xs sm:text-sm">No tasks</p>
         <p :class="getEmptyZoneSubtextClasses()" class="text-xs mt-1">Drop tasks here</p>
-        <button @click="$emit('add-todo')" :class="getAddTaskButtonClasses()" class="mt-2 text-xs hover:underline">
-          Add task
-        </button>
+        <div class="mt-2">
+          <AddTaskButton :status="status" variant="compact" @click="$emit('add-todo')" />
+        </div>
       </div>
 
       <!-- Todo Items Container -->
       <div v-else ref="columnRef" class="space-y-2 todo-items-container">
         <TodoItem v-for="todo in todos" :key="todo.id" :todo="todo" @edit="$emit('edit-todo', $event)"
           @delete="$emit('delete-todo', $event)" />
+
+        <!-- Add Task Button at Bottom -->
+        <div class="mt-3 pt-2 border-t border-gray-200/60 dark:border-gray-600/60">
+          <AddTaskButton :status="status" variant="default" @click="$emit('add-todo')" />
+        </div>
       </div>
     </div>
   </div>
@@ -49,6 +54,7 @@
 import { ref, onMounted, onUnmounted, nextTick, watch } from 'vue';
 import { useTodoStore } from '@/stores/todoStore';
 import TodoItem from './TodoItem.vue';
+import AddTaskButton from './AddTaskButton.vue';
 
 const props = defineProps({
   title: {
@@ -149,20 +155,6 @@ const getEmptyZoneSubtextClasses = () => {
   }
 };
 
-const getAddTaskButtonClasses = () => {
-  switch (props.status) {
-    case 'todo':
-      return 'text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300';
-    case 'in_progress':
-      return 'text-yellow-600 dark:text-yellow-400 hover:text-yellow-700 dark:hover:text-yellow-300';
-    case 'completed':
-      return 'text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300';
-    case 'deadline':
-      return 'text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300';
-    default:
-      return 'text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300';
-  }
-};
 
 // Drop indicator functions
 const addDropIndicator = (dropZone, event) => {
