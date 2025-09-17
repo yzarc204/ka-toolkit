@@ -128,7 +128,7 @@
       @click="closeLinkModal">
       <div class="bg-white dark:bg-gray-800 rounded-lg p-6 w-96 max-w-[90vw]" @click.stop>
         <h3 class="text-lg font-semibold mb-4 text-gray-900 dark:text-white">
-          {{ savedRange && savedRange.isEditing ? 'Edit Link' : 'Insert Link' }}
+          {{ editingLinkElement ? 'Edit Link' : 'Insert Link' }}
         </h3>
 
         <div class="space-y-4">
@@ -155,7 +155,7 @@
           </button>
           <button @click="insertLink"
             class="px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-md hover:bg-primary-700 transition-colors">
-            {{ savedRange && savedRange.isEditing ? 'Update Link' : 'Insert Link' }}
+            {{ editingLinkElement ? 'Update Link' : 'Insert Link' }}
           </button>
         </div>
       </div>
@@ -260,6 +260,7 @@ const linkText = ref('');
 const linkUrl = ref('');
 const selectedTextForDisplay = ref('');
 const savedRange = ref(null);
+const editingLinkElement = ref(null);
 
 // Set content when note changes
 watch(() => props.note, (newNote) => {
@@ -602,10 +603,7 @@ const showLinkModal = () => {
     selectedTextForDisplay.value = '';
 
     // Save reference to the current link for editing
-    savedRange.value = {
-      linkElement: currentLink,
-      isEditing: true
-    };
+    editingLinkElement.value = currentLink;
   } else {
     // Store the selected text for display
     selectedTextForDisplay.value = selectedText;
@@ -617,10 +615,7 @@ const showLinkModal = () => {
     }
 
     linkUrl.value = '';
-    savedRange.value = {
-      linkElement: null,
-      isEditing: false
-    };
+    editingLinkElement.value = null;
   }
 
   showLinkDialog.value = true;
@@ -632,6 +627,7 @@ const closeLinkModal = () => {
   linkUrl.value = '';
   selectedTextForDisplay.value = '';
   savedRange.value = null;
+  editingLinkElement.value = null;
 };
 
 const insertLink = () => {
@@ -651,9 +647,9 @@ const insertLink = () => {
   }
 
   // Check if we're editing an existing link
-  if (savedRange.value && savedRange.value.isEditing && savedRange.value.linkElement) {
+  if (editingLinkElement.value) {
     // Update existing link
-    const existingLink = savedRange.value.linkElement;
+    const existingLink = editingLinkElement.value;
     existingLink.href = linkUrl.value;
     existingLink.textContent = linkText.value;
 
@@ -684,7 +680,7 @@ const insertLink = () => {
   let range;
   const selection = window.getSelection();
 
-  if (savedRange.value && !savedRange.value.isEditing) {
+  if (savedRange.value && savedRange.value instanceof Range) {
     // Restore the saved range
     selection.removeAllRanges();
     selection.addRange(savedRange.value);
